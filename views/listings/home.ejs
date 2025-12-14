@@ -1,0 +1,101 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<!-- Hero Section -->
+<div class="container-fluid p-0">
+    <div class="hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 70vh; display: flex; align-items: center; justify-content: center; color: white; text-align: center; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover; opacity: 0.2;"></div>
+
+        <div class="hero-content" style="position: relative; z-index: 1; max-width: 800px; padding: 2rem;">
+            <h1 class="display-1 fw-bold mb-4" style="font-size: 4rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                WanderLust
+            </h1>
+            <p class="lead mb-4" style="font-size: 1.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                Discover Amazing Places Around The World
+            </p>
+            <p class="mb-5" style="font-size: 1.2rem; opacity: 0.9;">
+                Find your perfect stay from our collection of <%= counts || 0 %> unique listings
+            </p>
+            <div class="hero-buttons">
+                <a href="/listings" class="btn btn-light btn-lg me-3 px-5 py-3" style="border-radius: 50px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    Explore Listings
+                </a>
+                <a href="/listings/new" class="btn btn-outline-light btn-lg px-5 py-3" style="border-radius: 50px; font-weight: 600; border-width: 2px;">
+                    Add Your Property
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container my-5 py-5">
+    <div class="text-center mb-5">
+        <h2 class="display-4 fw-bold mb-3">Why Choose WanderLust?</h2>
+        <p class="text-muted lead">Your journey to extraordinary experiences starts here</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4" style="transition: transform 0.3s;">
+                <div class="card-body">
+                    <div class="feature-icon mb-3" style="font-size: 3rem;">🏠</div>
+                    <h4 class="card-title fw-bold mb-3">Unique Stays</h4>
+                    <p class="card-text text-muted">
+                        Discover handpicked properties from cozy cottages to luxury villas, each with its own character and charm.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4" style="transition: transform 0.3s;">
+                <div class="card-body">
+                    <div class="feature-icon mb-3" style="font-size: 3rem;">🌍</div>
+                    <h4 class="card-title fw-bold mb-3">Global Reach</h4>
+                    <p class="card-text text-muted">
+                        Explore destinations across the world. From beach resorts to mountain retreats, we've got you covered.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4" style="transition: transform 0.3s;">
+                <div class="card-body">
+                    <div class="feature-icon mb-3" style="font-size: 3rem;">⭐</div>
+                    <h4 class="card-title fw-bold mb-3">Trusted Community</h4>
+                    <p class="card-text text-muted">
+                        Join thousands of travelers and hosts creating unforgettable memories and sharing amazing experiences.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="container-fluid py-5 mb-5" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+    <div class="container text-center text-white">
+        <h2 class="display-5 fw-bold mb-3">Ready to Start Your Adventure?</h2>
+        <p class="lead mb-4">Browse our collection or list your property today!</p>
+        <a href="/listings" class="btn btn-light btn-lg px-5 py-3" style="border-radius: 50px; font-weight: 600;">
+            Get Started
+        </a>
+    </div>
+</div>
+
+<style>
+    .hero-buttons .btn {
+        transition: all 0.3s ease;
+    }
+
+    .hero-buttons .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    }
+</style>

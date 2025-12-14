@@ -1,0 +1,118 @@
+<% layout("/layouts/boilerplate.ejs") %>
+<div class="row mt-3">
+    <div class="col-8 offset-2">
+        <h2>Create New Listing</h2>
+        <form action="/listings" method="POST" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input
+                        id="title"
+                        name="listing[title]"
+                        placeholder="Add a catchy title"
+                        type="text"
+                        class="form-control"
+                        required
+                />
+                <div class="invalid-feedback">
+                    Title is required
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                        id="description"
+                        name="listing[description]"
+                        class="form-control"
+                        placeholder="Write something about your property..."
+                        required
+                ></textarea>
+                <div class="invalid-feedback">
+                    Please provide a description
+                </div>
+            </div>
+
+            <!-- Amaan message -> Adding image url is necessary else throws error -->
+            <div class="mb-3">
+                <label for="image" class="form-label">Image URL</label>
+                <input
+                        id="image"
+                        name="listing[image][url]"
+                        placeholder="Enter image URL/LINK"
+                        type="url"
+                        class="form-control"
+                />
+                <div class="invalid-feedback">
+                    Please provide a valid image URL
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label for="price" class="form-label">Price</label>
+                    <input
+                            id="price"
+                            name="listing[price]"
+                            class="form-control"
+                            type="number"
+                            min="0"
+                            placeholder="0.00"
+                            required
+                    />
+                    <div class="invalid-feedback">
+                        Please enter a valid price
+                    </div>
+                </div>
+                <div class="mb-3 col-md-8">
+                    <label for="country" class="form-label">Country</label>
+                    <input
+                            id="country"
+                            name="listing[country]"
+                            placeholder="India"
+                            type="text"
+                            class="form-control"
+                            required
+                    />
+                    <div class="invalid-feedback">
+                        Please provide a country name
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input
+                        id="location"
+                        name="listing[location]"
+                        placeholder="Jabalpur, MP"
+                        type="text"
+                        class="form-control"
+                        required
+                />
+                <div class="invalid-feedback">
+                    Please provide a location
+                </div>
+            </div>
+            <button class="btn btn-dark add-btn mt-3" type="submit">Add Listing</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Bootstrap form validation
+    (function () {
+        'use strict'
+
+        // Fetch the form we want to validate
+        const form = document.querySelector('.needs-validation')
+
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        }, false)
+    })()
+</script>
