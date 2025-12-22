@@ -6,6 +6,7 @@ const { listingSchema } = require("../joiSchema.js");
 const ExpressErrors = require("../utils/ExpressErrors.js");
 const Listing = require("../models/listing.js");
 const mongoose = require("mongoose");
+const { isLoggedIn } = require("../middleware.js");
 
 const validateListing = (req, res, next) => {
   console.log("=== VALIDATION DEBUG ===");
@@ -19,7 +20,7 @@ const validateListing = (req, res, next) => {
     next();
   }
 };
-// all listing routes
+
 // Index route (displays all listings)
 router.get(
   "/",
@@ -33,17 +34,13 @@ router.get(
 );
 
 // New route - MUST be before /:id routes
-router.get("/new", (req, res) => {
-  if(!req.isAuthenticated()){
-    req.flash("error", "you must be logged in to create a listing")
-    return res.redirect("/user/login")
-  }
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("listings/new.ejs");
 });
 
 // Create listing route
 router.post(
-  "/",
+  "/", isLoggedIn,
   validateListing,
   wrapAsync(async (req, res) => {
     let listing = req.body.listing;
@@ -55,6 +52,7 @@ router.post(
       delete listing.image;
     }
     const newListing = new Listing(listing);
+    newListing.owner = req.user._id;
     await newListing.save();
     req.flash("success", "Listing Created Successfully!");
     res.redirect(`/listings`);
@@ -63,7 +61,7 @@ router.post(
 
 // Edit listing route
 router.get(
-  "/:id/edit",
+  "/:id/edit", isLoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
@@ -76,7 +74,7 @@ router.get(
 
 // Update listing
 router.put(
-  "/:id",
+  "/:id", isLoggedIn,
   validateListing,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
@@ -106,18 +104,19 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
+    const listing = await Listing.findById(id).populate("reviews").populate("owner");
     if (!listing) {
       req.flash("error", "Listing you requested for does not exist!");
       return res.redirect("/listings");
     }
+    console.log(listing)
     res.render("listings/show.ejs", { listing: listing });
   })
 );
 
 // Delete listing route
 router.delete(
-  "/:id",
+  "/:id", isLoggedIn,
   wrapAsync(async (req, res, next) => {
     const { id } = req.params;
     // Validate MongoDB ObjectId format
