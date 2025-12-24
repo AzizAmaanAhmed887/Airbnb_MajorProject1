@@ -1,25 +1,10 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true }); // mergeParams to access params from parent router
-
 const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema } = require("../joiSchema.js");
-const ExpressErrors = require("../utils/ExpressErrors.js");
 const Listing = require("../models/listing.js");
 const mongoose = require("mongoose");
-const { isLoggedIn } = require("../middleware.js");
-
-const validateListing = (req, res, next) => {
-  console.log("=== VALIDATION DEBUG ===");
-  console.log("Request body:", JSON.stringify(req.body, null, 2));
-
-  let { error } = listingSchema.validate(req.body);
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressErrors(400, errMsg);
-  } else {
-    next();
-  }
-};
+const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 
 // Index route (displays all listings)
 router.get(
@@ -52,6 +37,7 @@ router.post(
       delete listing.image;
     }
     const newListing = new Listing(listing);
+    console.log(req.user)
     newListing.owner = req.user._id;
     await newListing.save();
     req.flash("success", "Listing Created Successfully!");
@@ -61,7 +47,7 @@ router.post(
 
 // Edit listing route
 router.get(
-  "/:id/edit", isLoggedIn,
+  "/:id/edit", isLoggedIn,isOwner,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
@@ -74,7 +60,7 @@ router.get(
 
 // Update listing
 router.put(
-  "/:id", isLoggedIn,
+  "/:id", isLoggedIn, isOwner,
   validateListing,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
@@ -83,7 +69,7 @@ router.put(
     if (req.body.listing.image && req.body.listing.image.url === "") {
       delete req.body.listing.image;
     }
-
+    
     const listing = await Listing.findByIdAndUpdate(
       id,
       req.body.listing, // Changed from req.body to req.body.listing
@@ -116,7 +102,7 @@ router.get(
 
 // Delete listing route
 router.delete(
-  "/:id", isLoggedIn,
+  "/:id", isLoggedIn,isOwner,
   wrapAsync(async (req, res, next) => {
     const { id } = req.params;
     // Validate MongoDB ObjectId format

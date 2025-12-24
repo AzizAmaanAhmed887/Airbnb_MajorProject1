@@ -6,16 +6,8 @@ const ExpressErrors = require("../utils/ExpressErrors.js");
 const Listing = require("../models/listing.js");
 const { reviewSchema } = require("../joiSchema.js");
 const Review = require("../models/reviews.js");
+const { validateReview } = require("../middleware.js")
 
-const validateReview = (req, res, next) => {
-  let { error } = reviewSchema.validate(req.body);
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressErrors(400, errMsg);
-  } else {
-    next();
-  }
-};
 
 // Create review route
 router.post(
