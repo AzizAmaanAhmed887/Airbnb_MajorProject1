@@ -46,7 +46,7 @@ router.get(
 // Delete listing route
 router.delete(
   "/:id", isLoggedIn, isOwner,
-  wrapAsync(listingController.deleteListing)
+  wrapAsync(listingController.destroyListing) // industry preferred name for 'delete' = destroy
 );
 
 module.exports = router;

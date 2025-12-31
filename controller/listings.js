@@ -78,7 +78,8 @@ module.exports.editListing = async (req, res) => {
     res.redirect(`/listings/${listing._id}`);
 }
 
-module.exports.deleteListing = async (req, res, next) => {
+// industry preferred name for 'delete' = destroy
+module.exports.destroyListing = async (req, res, next) => {
     const { id } = req.params;
     // Validate MongoDB ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {
