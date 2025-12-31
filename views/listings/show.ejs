@@ -76,7 +76,7 @@
                       <div class="card col-5 ms-3 mb-3">
                         <div class="card-body">
                           <h5 class="card-title"> <b>
-                              <%= review.author || review.username || 'Anonymous' %>
+                              @<%= review.author.username || review.username || 'Anonymous' %>
                             </b> </h5>
                           <p class="card-text">
                             <%= review.comment %>

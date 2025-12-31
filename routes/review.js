@@ -6,12 +6,12 @@ const ExpressErrors = require("../utils/ExpressErrors.js");
 const Listing = require("../models/listing.js");
 const { reviewSchema } = require("../joiSchema.js");
 const Review = require("../models/reviews.js");
-const { validateReview, isLoggedIn } = require("../middleware.js")
+const { validateReview, isLoggedIn, isReviewAuthor } = require("../middleware.js")
 
 
 // Create review route
 router.post(
-  "/",isLoggedIn,
+  "/", isLoggedIn,
   validateReview,
   wrapAsync(async (req, res) => {
     // Find the listing by ID
@@ -20,7 +20,7 @@ router.post(
     if (!listing) throw new ExpressErrors(404, "Listing not found");
 
     let review = new Review(req.body.review);
-    newReview.author = req.user._id;
+    review.author = req.user._id;
     await review.save();
     req.flash("success", "New review Created"); // flash successfull creation of review
 
@@ -38,6 +38,7 @@ router.post(
 // REVIEW DELETE ROUTE
 router.delete(
   "/:reviewId",
+  isReviewAuthor,
   wrapAsync(async (req, res) => {
     console.log("=== DELETE REVIEW DEBUG ===");
     console.log("Full params:", req.params);

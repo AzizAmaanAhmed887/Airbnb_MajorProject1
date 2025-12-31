@@ -47,7 +47,7 @@ router.post(
 
 // Edit listing route
 router.get(
-  "/:id/edit", isLoggedIn,isOwner,
+  "/:id/edit", isLoggedIn, isOwner,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
@@ -69,7 +69,7 @@ router.put(
     if (req.body.listing.image && req.body.listing.image.url === "") {
       delete req.body.listing.image;
     }
-    
+
     const listing = await Listing.findByIdAndUpdate(
       id,
       req.body.listing, // Changed from req.body to req.body.listing
@@ -90,7 +90,13 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews").populate("owner");
+    const listing = await Listing.findById(id)
+    .populate({ 
+      path: "reviews",
+      populate:{
+        path:"author"
+    },
+  }).populate("owner");
     if (!listing) {
       req.flash("error", "Listing you requested for does not exist!");
       return res.redirect("/listings");
@@ -102,7 +108,7 @@ router.get(
 
 // Delete listing route
 router.delete(
-  "/:id", isLoggedIn,isOwner,
+  "/:id", isLoggedIn, isOwner,
   wrapAsync(async (req, res, next) => {
     const { id } = req.params;
     // Validate MongoDB ObjectId format
