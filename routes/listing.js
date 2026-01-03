@@ -6,8 +6,9 @@ const Listing = require("../models/listing.js");
 const mongoose = require("mongoose");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 
-
+// MVC short route
 const listingController = require("../controller/listings.js")
+
 // Index route (displays all listings)
 router.get(
   "/",
