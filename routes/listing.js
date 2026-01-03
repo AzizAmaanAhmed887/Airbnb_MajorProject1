@@ -6,48 +6,44 @@ const Listing = require("../models/listing.js");
 const mongoose = require("mongoose");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 
-// MVC short route
+// MVC short route for listing
 const listingController = require("../controller/listings.js")
 
-// Index route (displays all listings)
-router.get(
-  "/",
-  wrapAsync(listingController.index)
-);
+
+// router.route() -> root -> "/"
+router.route("/")
+  .get(
+    // Index route (displays all listings)
+    wrapAsync(listingController.index)
+  )
+  .post( // Create listing route
+    isLoggedIn,
+    validateListing,
+    wrapAsync(listingController.createListing)
+  )
 
 // New route - MUST be before /:id routes
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
-// Create listing route
-router.post(
-  "/", isLoggedIn,
-  validateListing,
-  wrapAsync(listingController.createListing)
-);
+// router.route() -> '/:id'
+router.route("/:id")
+  .put( // Update listing
+    isLoggedIn, isOwner,
+    validateListing,
+    wrapAsync(listingController.editListing)
+  )
+  .get( // Show Route
+    wrapAsync(listingController.showListing)
+  )
+  .delete( // Delete listing route
+    isLoggedIn, isOwner,
+    wrapAsync(listingController.destroyListing) // industry preferred name for 'delete' = destroy
+  )
 
 // Edit listing route
 router.get(
   "/:id/edit", isLoggedIn, isOwner,
   wrapAsync(listingController.renderEditListing)
-);
-
-// Update listing
-router.put(
-  "/:id", isLoggedIn, isOwner,
-  validateListing,
-  wrapAsync(listingController.editListing)
-);
-
-// Show Route
-router.get(
-  "/:id",
-  wrapAsync(listingController.showListing)
-);
-
-// Delete listing route
-router.delete(
-  "/:id", isLoggedIn, isOwner,
-  wrapAsync(listingController.destroyListing) // industry preferred name for 'delete' = destroy
 );
 
 module.exports = router;

@@ -8,55 +8,21 @@ const { reviewSchema } = require("../joiSchema.js");
 const Review = require("../models/reviews.js");
 const { validateReview, isLoggedIn, isReviewAuthor } = require("../middleware.js")
 
+// MVC short route for review 
+const reviewController = require("../controller/reviews.js")
 
 // Create review route
 router.post(
   "/", isLoggedIn,
   validateReview,
-  wrapAsync(async (req, res) => {
-    // Find the listing by ID
-    let listing = await Listing.findById(req.params.id);
-
-    if (!listing) throw new ExpressErrors(404, "Listing not found");
-
-    let review = new Review(req.body.review);
-    review.author = req.user._id;
-    await review.save();
-    req.flash("success", "New review Created"); // flash successfull creation of review
-
-    review.author = req.user._id
-    // console.log(review)
-
-    listing.reviews.push(review._id); // Associate the review with the listing
-    await listing.save(); // Save both the listing and the review
-
-    // Redirect back to the listing's show page
-    res.redirect(`/listings/${listing._id}`);
-  })
+  wrapAsync(reviewController.createReview)
 );
 
 // REVIEW DELETE ROUTE
 router.delete(
   "/:reviewId",
   isReviewAuthor,
-  wrapAsync(async (req, res) => {
-    console.log("=== DELETE REVIEW DEBUG ===");
-    console.log("Full params:", req.params);
-    console.log("Listing ID:", req.params.id);
-    console.log("Review ID:", req.params.reviewId);
-    console.log("=========================");
-
-    const { id, reviewId } = req.params;
-
-    // Remove the review from the Listing's reviews array
-    await Listing.findByIdAndUpdate(id, {
-      $pull: { reviews: reviewId },
-    });
-    // Delete the review document
-    await Review.findByIdAndDelete(reviewId);
-    req.flash("success", "Review deleted successfully"); // flash successfully deletion of review
-    res.redirect(`/listings/${id}`);
-  })
+  wrapAsync(reviewController.destroyReview)
 );
 
 module.exports = router;

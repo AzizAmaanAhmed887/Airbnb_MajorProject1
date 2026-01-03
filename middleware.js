@@ -23,6 +23,13 @@ module.exports.isOwner = async (req, res, next) => {
     const { id } = req.params;
 
     let listing1 = await Listing.findById(id)
+
+     // Check if listing exists first
+    if (!listing1) {
+        req.flash("error", "Listing not found");
+        return res.redirect("/listings");
+    }
+    
     if (!res.locals.currUser || !listing1.owner.equals(res.locals.currUser._id)) {
         req.flash("error", "you're not the owner of listing")
         return res.redirect(`/listings/${id}`);
