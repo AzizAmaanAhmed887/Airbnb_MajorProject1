@@ -5,19 +5,23 @@ const { listingSchema } = require("../joiSchema.js");
 const Listing = require("../models/listing.js");
 const mongoose = require("mongoose");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
-
 // MVC short route for listing
 const listingController = require("../controller/listings.js")
+// requiring cloudinary, storage from cloudConfig.js
+const { storage } = require("../cloudConfig.js")
+// multer package
+const multer = require('multer')
+
+const upload = multer({ storage })
 
 
-// router.route() -> root -> "/"
 router.route("/")
-  .get(
-    // Index route (displays all listings)
+  .get( // Index route (displays all listings)
     wrapAsync(listingController.index)
   )
   .post( // Create listing route
     isLoggedIn,
+    upload.single('listing[image]'),
     validateListing,
     wrapAsync(listingController.createListing)
   )
@@ -28,7 +32,9 @@ router.get("/new", isLoggedIn, listingController.renderNewForm);
 // router.route() -> '/:id'
 router.route("/:id")
   .put( // Update listing
-    isLoggedIn, isOwner,
+    isLoggedIn,
+    upload.single('listing[image]'),
+    isOwner,
     validateListing,
     wrapAsync(listingController.editListing)
   )

@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -93,6 +97,7 @@ app.use((req, res, next) => {
 
 // error handling middleware
 app.use((err, req, res, next) => {
+  console.log(err);
   let { statusCode = 500, message = "Internal server error" } = err;
   res.status(statusCode).render("listings/error.ejs", { message });
 });

@@ -164,6 +164,7 @@ body {
 .add-btn {
   background-color: #ff385c !important;
   border: none !important;
+  margin-bottom: 8px;
 }
 
 /* edit page */

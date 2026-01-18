@@ -3,7 +3,7 @@ const Listing = require("../models/listing.js");
 
 module.exports.createReview = async (req, res) => {
     // Find the listing by ID
-    let listings = await Listing.findById(req.params.id);
+    let listing = await Listing.findById(req.params.id);
 
     if (!listing) throw new ExpressErrors(404, "Listing not found");
 
