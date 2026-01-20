@@ -117,4 +117,29 @@
                         <% } %>
               </div>
         </div>
+
+        <!-- Map Section -->
+        <div class="col-10 offset-0 mb-3">
+          <h4>Where you’ll be</h4>
+          <p><%= listing.location %>, <%= listing.country %></p>
+          <div id="map" style="height: 400px;"></div>
+        </div>
   </div>
+
+  <!-- Leaflet CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const map = L.map('map').setView([<%= listing.geometry.coordinates[1] %>, <%= listing.geometry.coordinates[0] %>], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      L.marker([<%= listing.geometry.coordinates[1] %>, <%= listing.geometry.coordinates[0] %>]).addTo(map)
+        .bindPopup('<b><%= listing.location %>, <%= listing.country %></b>')
+        .openPopup();
+    });
+  </script>

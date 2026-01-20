@@ -43,6 +43,14 @@ module.exports.createListing = async (req, res) => {
     delete listing.image;
   }
 
+  // Build geometry from latitude and longitude
+  listing.geometry = {
+    type: "Point",
+    coordinates: [parseFloat(listing.longitude), parseFloat(listing.latitude)]
+  };
+  delete listing.latitude;
+  delete listing.longitude;
+
   const newListing = new Listing(listing);
   newListing.owner = req.user._id;
   newListing.image = { url, filename };
@@ -74,10 +82,13 @@ module.exports.renderEditListing = async (req, res) => {
 module.exports.editListing = async (req, res) => {
   const { id } = req.params;
 
-  // // Handle image if it's an empty string
-  // if (req.body.listing.image && req.body.listing.image.url === "") {
-  //     delete req.body.listing.image;
-  // }
+  // Build geometry from latitude and longitude
+  req.body.listing.geometry = {
+    type: "Point",
+    coordinates: [parseFloat(req.body.listing.longitude), parseFloat(req.body.listing.latitude)]
+  };
+  delete req.body.listing.latitude;
+  delete req.body.listing.longitude;
 
   const listing = await Listing.findByIdAndUpdate(
     id,

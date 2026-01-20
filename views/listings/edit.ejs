@@ -96,6 +96,40 @@
         <div class="valid-feedback">Looks good!</div>
         <div class="invalid-feedback">Please fill out this field.</div>
       </div>
+
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label for="latitude" class="form-label">Latitude</label>
+          <input
+            type="number"
+            step="any"
+            id="latitude"
+            name="listing[latitude]"
+            value="<%= listing.geometry.coordinates[1] %>"
+            placeholder="28.6139"
+            class="form-control"
+            required
+          />
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+        <div class="mb-3 col-md-6">
+          <label for="longitude" class="form-label">Longitude</label>
+          <input
+            type="number"
+            step="any"
+            id="longitude"
+            name="listing[longitude]"
+            value="<%= listing.geometry.coordinates[0] %>"
+            placeholder="77.2090"
+            class="form-control"
+            required
+          />
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+      </div>
+
       <button class="btn btn-dark edit-btn mt-3" type="submit">Edit</button>
     </form>
   </div>

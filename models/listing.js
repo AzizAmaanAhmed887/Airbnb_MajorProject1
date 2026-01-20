@@ -52,6 +52,17 @@ const listingSchema = new mongoose.Schema(
       required: [true, "Country is required"],
       trim: true,
     },
+    geometry: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        required: true
+      },
+      coordinates: {
+        type: [Number],
+        required: true
+      }
+    },
     reviews: [
       {
         type: mongoose.Schema.Types.ObjectId,

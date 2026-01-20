@@ -54,6 +54,26 @@
                         Please provide a location
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="latitude" class="form-label">Latitude</label>
+                        <input id="latitude" name="listing[latitude]" placeholder="28.6139" type="number" step="any"
+                            class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please provide latitude
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="longitude" class="form-label">Longitude</label>
+                        <input id="longitude" name="listing[longitude]" placeholder="77.2090" type="number" step="any"
+                            class="form-control" required />
+                        <div class="invalid-feedback">
+                            Please provide longitude
+                        </div>
+                    </div>
+                </div>
+
                 <button class="btn btn-dark add-btn mt-3" type="submit">Add Listing</button>
             </form>
         </div>
