@@ -52,7 +52,7 @@ const listingSchema = new mongoose.Schema(
       required: [true, "Country is required"],
       trim: true,
     },
-    geometry: {
+    geometry: { // standard format to store geospatial data
       type: {
         type: String,
         enum: ['Point'],
