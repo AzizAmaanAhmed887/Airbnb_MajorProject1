@@ -102,6 +102,7 @@ const sampleListings = [
         location: "Los Angeles",
         country: "United States",
         geometry: { type: "Point", coordinates: [-118.2437, 34.0522] },
+        
     },
     {
         title: "Ski-In/Ski-Out Chalet",

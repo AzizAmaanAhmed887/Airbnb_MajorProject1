@@ -61,13 +61,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get(
-  "/",
-  wrapAsync(async (req, res) => {
-    const counts = await Listing.countDocuments();
-    res.render("listings/home.ejs", { counts });
-  })
-);
+// app.get(
+//   "/",
+//   wrapAsync(async (req, res) => {
+//     const counts = await Listing.countDocuments();
+//     res.render("listings/home.ejs", { counts });
+//   })
+// );
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

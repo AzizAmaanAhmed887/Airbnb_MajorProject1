@@ -1,159 +1,160 @@
 <% layout('layouts/boilerplate.ejs') %>
 
-  <div class="row mt-3">
-    <div class="col-8 offset-3">
-      <h3><b>
-          <%= listing.title %>
-        </b></h3>
-    </div>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const deleteBtn = document.getElementById('delete-listing-btn');
-        if (deleteBtn) {
-          deleteBtn.addEventListener('click', function (e) {
-            if (!confirm('Are you sure you want to delete this listing?')) {
-              e.preventDefault();
-            }
-          });
-        }
-      });
-    </script>
-    <div class="card col-6 offset-3 show-card listing-card">
-      <img src="<%= listing.image.url %>" class="card-img-top show-image" alt="listing_image" />
-      <div class="card-body">
-        <p class="card-text">Owner: <b>
-            <%= listing.owner.username %>
-          </b></p>
-        <p class="card-text">description: <%= listing.description %>
-        </p>
-        <p class="card-text">price: &#8377; <%= listing.price %> per night </p>
-        <p class="card-text">Location: <%= listing.location %>
-        </p>
-        <p class="card-text">Country: <%= listing.country %>
-        </p>
-      </div>
-    </div>
-
-    <br />
-    <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
-
-      <div class="btns">
-        <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
-
-        <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="d-inline">
-          <input type="hidden" name="_method" value="DELETE" />
-          <button class="btn btn-dark offset-5" type="submit" id="delete-listing-btn">
-            Delete
-          </button>
-        </form>
-
-      </div>
-
-      <% } %>
-
-
-        <div class="col-8 offset-3 mb-3">
-          <!-- Taking review(rating + comment) from user if user is loggedIn-->
-          <% if (currUser) {%>
-            <h4>Leave a Review</h4>
-            <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
-
-              <div class="mb-3 mt-3">
-                <label for="rating" class="form-label">Rating</label>
-                <fieldset class="starability-slot">
-                  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
-                    aria-label="No rating." />
-                  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                  <label for="first-rate1" title="Terrible">1 star</label>
-                  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                  <label for="first-rate2" title="Not good">2 stars</label>
-                  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                  <label for="first-rate3" title="Average">3 stars</label>
-                  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                  <label for="first-rate4" title="Very good">4 stars</label>
-                  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                  <label for="first-rate5" title="Amazing">5 stars</label>
-                </fieldset>
-              </div>
-
-              <div class="mb-3 mt-3">
-                <label for="comment" class="form-label">Comment</label>
-                <textarea name="review[comment]" id="comment" rows="3" class="form-control" required></textarea>
-                <div class="invalid-feedback">
-                  Please provide a comment for your review.
-                </div>
-                <button type="submit" class="btn btn-outline-dark">Submit</button>
-            </form>
-            <% } %>
-
-              <p><b>All reviews:</b></p>
-              <div class="row">
-                <% if (listing.reviews.length===0) { %>
-                  <p>No reviews yet. Be the first to review!</p>
-                  <% } else { %>
-                    <% for (let review of listing.reviews) { %>
-                      <div class="card col-5 ms-3 mb-3">
-                        <div class="card-body">
-                          <h5 class="card-title"> <b>
-                              @<%= review.author.username || review.username || 'Anonymous' %>
-                            </b> </h5>
-                          <!-- showing rating star on previously added reviews -->
-                          <p class="starability-result card-text" data-rating="<%= review.rating %>">
-                          </p>
-                          <p class="card-text">
-                            <%= review.comment %>
-                          </p>
-
-
-                          <!-- Now writing logic to delete a review -->
-                          <form method="POST"
-                            action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="ms-3">
-                            <!-- Remove this line: <input type="hidden" name="_method" value="DELETE" /> -->
-                            <button class="btn btn-sm btn-dark">Delete</button>
-                          </form>
-                        </div>
-                      </div>
-                      <% } %>
-                        <% } %>
-              </div>
-        </div>
-
-        <!-- Map Section -->
-        <div class="col-8 offset-0 mb-3">
-          <h4>Where you'll be</h4>
-          <p>
-            <%= listing.location %>, <%= listing.country %>
-          </p>
-          <div id="map" style="height: 400px; width: 814px;"></div>
-        </div>
+<div class="row mt-3">
+  <div class="col-8 offset-3">
+    <h3><b>
+        <%= listing.title %>
+      </b></h3>
   </div>
-
-  <!-- Leaflet CSS and JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const lat = <%= listing.geometry.coordinates[1] %>;
-      const lng = <%= listing.geometry.coordinates[0] %>;
-      const map = L.map('map').setView([lat, lng], 13);
-
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
-
-      // Custom red marker
-      const redIcon = L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      });
-
-      L.marker([lat, lng], { icon: redIcon }).addTo(map)
-        .bindPopup('<b><%= listing.location %>, <%= listing.country %></b>')
-        .openPopup();
+    document.addEventListener('DOMContentLoaded', function() {
+      const deleteBtn = document.getElementById('delete-listing-btn');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', function(e) {
+          if (!confirm('Are you sure you want to delete this listing?')) {
+            e.preventDefault();
+          }
+        });
+      }
     });
   </script>
+  <div class="card col-6 offset-3 show-card listing-card">
+    <img src="<%= listing.image.url %>" class="card-img-top show-image" alt="listing_image" />
+    <div class="card-body">
+      <p class="card-text">Owner: <b>
+          <%= listing.owner.username %>
+        </b></p>
+      </p>
+      <p class="card-text">description: <%= listing.description %>
+      </p>
+      <p class="card-text">price: &#8377; <%= listing.price %> per night </p>
+      <p class="card-text">Location: <%= listing.location %>
+      </p>
+      <p class="card-text">Country: <%= listing.country %>
+      </p>
+    </div>
+  </div>
+
+  <br />
+  <% if (currUser && listing.owner._id.equals(currUser._id)) { %>
+
+  <div class="btns">
+    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
+
+    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="d-inline">
+      <input type="hidden" name="_method" value="DELETE" />
+      <button class="btn btn-dark offset-5" type="submit" id="delete-listing-btn">
+        Delete
+      </button>
+    </form>
+
+  </div>
+
+  <% } %>
+
+
+  <div class="col-8 offset-3 mb-3">
+    <!-- Taking review(rating + comment) from user if user is loggedIn-->
+    <% if (currUser) {%>
+    <h4>Leave a Review</h4>
+    <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+
+      <div class="mb-3 mt-3">
+        <label for="rating" class="form-label">Rating</label>
+        <fieldset class="starability-slot">
+          <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+          <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+          <label for="first-rate1" title="Terrible">1 star</label>
+          <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+          <label for="first-rate2" title="Not good">2 stars</label>
+          <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+          <label for="first-rate3" title="Average">3 stars</label>
+          <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+          <label for="first-rate4" title="Very good">4 stars</label>
+          <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+          <label for="first-rate5" title="Amazing">5 stars</label>
+        </fieldset>
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="comment" class="form-label">Comment</label>
+        <textarea name="review[comment]" id="comment" rows="3" class="form-control" required></textarea>
+        <div class="invalid-feedback">
+          Please provide a comment for your review.
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Submit</button>
+    </form>
+    <% } %>
+
+    <p><b>All reviews:</b></p>
+    <div class="row">
+      <% if (listing.reviews.length===0) { %>
+      <p>No reviews yet. Be the first to review!</p>
+      <% } else { %>
+      <% for (let review of listing.reviews) { %>
+      <div class="card col-5 ms-3 mb-3">
+        <div class="card-body">
+          <h5 class="card-title"> <b>
+              @<%= review.author.username || review.username || 'Anonymous' %>
+            </b> </h5>
+          <!-- showing rating star on previously added reviews -->
+          <p class="starability-result card-text" data-rating="<%= review.rating %>">
+          </p>
+          <p class="card-text">
+            <%= review.comment %>
+          </p>
+
+
+          <!-- Now writing logic to delete a review -->
+          <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="ms-3">
+            <!-- Remove this line: <input type="hidden" name="_method" value="DELETE" /> -->
+            <button class="btn btn-sm btn-dark">Delete</button>
+          </form>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Map Section -->
+  <div class="col-8 offset-0 mb-3">
+    <h4>Where you'll be</h4>
+    <p>
+      <%= listing.location %>, <%= listing.country %>
+    </p>
+    <div id="map" style="height: 400px; width: 814px;"></div>
+  </div>
+</div>
+
+<!-- Leaflet CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const lat = <%= listing.geometry.coordinates[1] %>;
+    const lng = <%= listing.geometry.coordinates[0] %>;
+    const map = L.map('map').setView([lat, lng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Custom red marker
+    const redIcon = L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    L.marker([lat, lng], {
+        icon: redIcon
+      }).addTo(map)
+      .bindPopup('<b><%= listing.location %>, <%= listing.country %></b>')
+      .openPopup();
+  });
+</script>

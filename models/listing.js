@@ -72,7 +72,12 @@ const listingSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
-    }
+    },
+    // catagory: {
+    //   type: String,
+    //   // required: [true, "Catagory is required"],
+    //   enum: ["Trending", "Rooms", "Iconic cities", "Mountains", "Castles", "Amazing pools", "Camping", "Farms", "Arctic"]
+    // },
   },
   {
     timestamps: true,
