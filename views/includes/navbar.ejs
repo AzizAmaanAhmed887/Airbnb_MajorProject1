@@ -1,3 +1,28 @@
+<style>
+  .search-btn {
+    background-color: #ff385c;
+    color: white;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+  }
+
+  .search-btn:hover {
+    background-color: #e31c4b;
+    color: white;
+  }
+
+  .search-btn i {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+
+  .search-inp {
+    border-radius: 25px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+  }
+</style>
+
+
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
@@ -9,6 +34,16 @@
         <!-- <a class="nav-link" href="/listings">Home</a> -->
         <a class="nav-link" href="/listings">Explore</a>
       </div>
+
+      <!-- Search Bar -->
+      <div class="navbar-nav ms-auto">
+        <form class="d-flex" role="search">
+          <input class="form-control me-2 search-inp" type="search" placeholder="Search destinations" />
+          <button class="btn search-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+      </div>
+
+
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">Become a host</a>
         <% if (!currUser) { %>
@@ -21,3 +56,8 @@
     </div>
   </div>
 </nav>
+
+<script>
+  // js logic for search bar
+  
+</script>

@@ -60,6 +60,7 @@ const listingSchema = new mongoose.Schema(
       },
       coordinates: {
         type: [Number],
+        default: [0, 0],
         required: true
       }
     },
@@ -73,11 +74,11 @@ const listingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
-    // catagory: {
-    //   type: String,
-    //   // required: [true, "Catagory is required"],
-    //   enum: ["Trending", "Rooms", "Iconic cities", "Mountains", "Castles", "Amazing pools", "Camping", "Farms", "Arctic"]
-    // },
+    category: {
+      type: String,
+      // required: [true, "Catagory is required"],
+      enum: ["Trending", "Rooms", "Iconic cities", "Mountains", "Castles", "Amazing pools", "Camping", "Farms", "Arctic"]
+    },
   },
   {
     timestamps: true,
@@ -100,5 +101,16 @@ listingSchema.index({ location: 1 });
 listingSchema.index({ country: 1 });
 
 const Listing = mongoose.model("Listing", listingSchema);
+
+// Add this before the model export
+listingSchema.pre("save", function (next) {
+  if (!this.geometry) {
+    this.geometry = {
+      type: "Point",
+      coordinates: [0, 0]
+    };
+  }
+  next();
+});
 
 module.exports = Listing;

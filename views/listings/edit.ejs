@@ -97,37 +97,21 @@
         <div class="invalid-feedback">Please fill out this field.</div>
       </div>
 
-      <div class="row">
-        <div class="mb-3 col-md-6">
-          <label for="latitude" class="form-label">Latitude</label>
-          <input
-            type="number"
-            step="any"
-            id="latitude"
-            name="listing[latitude]"
-            value="<%= listing.geometry.coordinates[1] %>"
-            placeholder="28.6139"
-            class="form-control"
-            required
-          />
-          <div class="valid-feedback">Looks good!</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
-        <div class="mb-3 col-md-6">
-          <label for="longitude" class="form-label">Longitude</label>
-          <input
-            type="number"
-            step="any"
-            id="longitude"
-            name="listing[longitude]"
-            value="<%= listing.geometry.coordinates[0] %>"
-            placeholder="77.2090"
-            class="form-control"
-            required
-          />
-          <div class="valid-feedback">Looks good!</div>
-          <div class="invalid-feedback">Please fill out this field.</div>
-        </div>
+      <!-- div for category -->
+      <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <select name="listing[category]" id="category" class="form-select" required>
+          <option value="">Select a category</option>
+          <option value="Trending" <%= listing.category === "Trending" ? "selected" : "" %>>Trending</option>
+          <option value="Rooms" <%= listing.category === "Rooms" ? "selected" : "" %>>Rooms</option>
+          <option value="Iconic cities" <%= listing.category === "Iconic cities" ? "selected" : "" %>>Iconic cities</option>
+          <option value="Mountains" <%= listing.category === "Mountains" ? "selected" : "" %>>Mountains</option>
+          <option value="Castles" <%= listing.category === "Castles" ? "selected" : "" %>>Castles</option>
+          <option value="Amazing pools" <%= listing.category === "Amazing pools" ? "selected" : "" %>>Amazing pools</option>
+          <option value="Camping" <%= listing.category === "Camping" ? "selected" : "" %>>Camping</option>
+          <option value="Farms" <%= listing.category === "Farms" ? "selected" : "" %>>Farms</option>
+          <option value="Arctic" <%= listing.category === "Arctic" ? "selected" : "" %>>Arctic</option>
+        </select>
       </div>
 
       <button class="btn btn-dark edit-btn mt-3" type="submit">Edit</button>

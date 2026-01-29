@@ -195,6 +195,12 @@ AirBnb_MajorProject1/
 | POST | `/user/login` | Authenticate user | No |
 | GET | `/user/logout` | Logout user | Yes |
 
+### Adding maps
+Used map api = leaflet
+
+### Deployement
+Used technology -> Mongo Atlas
+
 ## 🎨 Screenshots
 
 > Add screenshots of your application here
